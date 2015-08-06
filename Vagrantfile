@@ -3,16 +3,20 @@
 
 Vagrant.configure(2) do |config|
   config.vm.box = "debian/jessie64"
+  config.vm.hostname = "docker-lnmp"
 
   # config.vm.box_check_update = false
 
-  # config.vm.network "forwarded_port", guest: 80, host: 8080
+  config.vm.network "forwarded_port", guest: 80, host: 8000
 
   config.vm.network "private_network", ip: "10.1.15.100"
 
   # config.vm.network "public_network"
 
   # config.vm.synced_folder "../data", "/vagrant_data"
+
+  # fix docker-mysql has no permission to access vagrant shared folder
+  # config.vm.synced_folder ".", "/vagrant", :mount_options => ['dmode=777,fmode=666']
 
   # config.vm.provider "virtualbox" do |vb|
   #   # Display the VirtualBox GUI when booting the machine
@@ -36,6 +40,6 @@ Vagrant.configure(2) do |config|
   # fix error -> stdin: is not a tty
   config.ssh.shell = "bash -c 'BASH_ENV=/etc/profile exec bash'"
   config.vm.provision :shell , path: "install_docker.sh"
-  # config.vm.provision :shell, inline: "cd /vagrant && docker-compose up -d"
+  config.vm.provision :shell, inline: "cd /vagrant && docker-compose up -d"
 
 end
