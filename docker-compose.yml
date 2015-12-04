@@ -30,6 +30,23 @@ nginx:
   links:
     - php:php-fpm
   ports:
-    - 80:80
+    - 80
   volumes_from:
     - data
+
+nginx2:
+  build: ./nginx
+  links:
+    - php:php-fpm
+  ports:
+    - 80
+  volumes_from:
+    - data
+
+varnish:
+  build: ./varnish
+  links:
+    - nginx:nginx
+    - nginx2:nginx2
+  ports:
+   - 80:80
